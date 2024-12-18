@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
-import { CheckerFormProps } from '../types/types';
+import type React from "react";
+import { useState } from "react";
+import { Search } from "lucide-react";
+import type { CheckerFormProps } from "../types/types";
 
 export function CheckerForm({ onSubmit, isLoading }: CheckerFormProps) {
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Ensure URL has protocol
-    let processedUrl = url;
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      processedUrl = 'https://' + url;
-    }
-    
+    const processedUrl =
+      url.startsWith("http://") || url.startsWith("https://")
+        ? url
+        : `https://${url}`;
+
     onSubmit(processedUrl);
   };
 
@@ -24,7 +25,7 @@ export function CheckerForm({ onSubmit, isLoading }: CheckerFormProps) {
           type="text"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter website URL (e.g., example.com)"
+          placeholder="Enter website URL(e.g., example.com)"
           className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
         />
