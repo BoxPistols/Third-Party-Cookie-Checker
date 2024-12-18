@@ -1,6 +1,7 @@
 import { ResourceInfo } from '../types/types';
 import { fetchWithProxy } from './proxyUtils';
 import { extractDomain } from './domainUtils';
+import { isStaticResource } from './resourceFilter';
 
 export async function analyzeExternalResources(url: string): Promise<ResourceInfo[]> {
   try {
@@ -28,7 +29,7 @@ export async function analyzeExternalResources(url: string): Promise<ResourceInf
       });
     });
 
-    return resources;
+    return resources.filter(resource => !isStaticResource(resource.url));
   } catch (error) {
     console.error('Resource analysis error:', error);
     throw new Error('Failed to analyze external resources');

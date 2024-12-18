@@ -9,7 +9,7 @@ interface ResultDisplayProps {
 export function ResultDisplay({ result }: ResultDisplayProps) {
   if (!result) return null;
 
-  const totalThirdParty = result.cookies.length + result.thirdPartyResources.length;
+  const totalThirdPartyCookies = result.cookies.length;
 
   return (
     <div className="w-full max-w-2xl mt-8 bg-white rounded-lg shadow-lg p-6">
@@ -21,8 +21,8 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
         )}
         <h2 className="text-xl font-semibold">
           {result.hasThirdPartyCookies
-            ? `${totalThirdParty} Third-Party Source${totalThirdParty > 1 ? 's' : ''} Detected`
-            : 'No Third-Party Sources Detected'}
+            ? `${totalThirdPartyCookies} Third-Party Cookie${totalThirdPartyCookies > 1 ? 's' : ''} Detected`
+            : 'No Third-Party Cookies Detected'}
         </h2>
       </div>
       
@@ -51,35 +51,6 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
                 <pre className="mt-2 text-sm text-gray-600 overflow-x-auto">
                   {cookie.raw}
                 </pre>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {result.thirdPartyResources.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-3">Third-Party Resources:</h3>
-          <div className="space-y-4">
-            {result.thirdPartyResources.map((resource, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="font-medium text-gray-800">
-                    Domain: <span className="text-blue-600">{resource.domain}</span>
-                  </p>
-                  <span className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">
-                    {resource.type}
-                  </span>
-                </div>
-                <a 
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                >
-                  {resource.url}
-                  <ExternalLink className="w-3 h-3" />
-                </a>
               </div>
             ))}
           </div>
