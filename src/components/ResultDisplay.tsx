@@ -5,22 +5,62 @@ interface ResultDisplayProps {
   result: CookieCheckResult | null;
 }
 
+function isImageUrl(url: string): boolean {
+  const imageExtensions = [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".svg",
+    ".ico",
+    ".webp",
+    ".avif",
+    ".bmp",
+  ];
+
+  const lowerUrl = url.toLowerCase();
+  return imageExtensions.some(
+    (ext) => lowerUrl.endsWith(ext) || lowerUrl.includes(ext + "?")
+  );
+}
+
+// 除外すべきCDNドメインの判定
+function isExcludedDomain(domain: string): boolean {
+  const excludedDomains = [
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "ajax.googleapis.com",
+    "cdnjs.cloudflare.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+  ];
+
+  return excludedDomains.some((excludedDomain) =>
+    domain.toLowerCase().includes(excludedDomain)
+  );
+}
+
 export function ResultDisplay({ result }: ResultDisplayProps) {
   if (!result) return null;
 
-  const totalThirdParty =
-    result.cookies.length + result.thirdPartyResources.length;
+  // リソースのフィルタリング - 画像とCDNを除外
+  const filteredResources = result.thirdPartyResources.filter(
+    (resource) =>
+      !isImageUrl(resource.url) && !isExcludedDomain(resource.domain)
+  );
+
+  const totalThirdParty = result.cookies.length + filteredResources.length;
 
   return (
     <div className="w-full max-w-2xl mt-8 bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center gap-3 mb-4">
-        {result.hasThirdPartyCookies ? (
+        {totalThirdParty > 0 ? (
           <AlertCircle className="w-6 h-6 text-red-500" />
         ) : (
           <CheckCircle className="w-6 h-6 text-green-500" />
         )}
         <h2 className="text-xl font-semibold">
-          {result.hasThirdPartyCookies
+          {totalThirdParty > 0
             ? `${totalThirdParty} Third-Party Source${
                 totalThirdParty > 1 ? "s" : ""
               } Detected`
@@ -62,11 +102,11 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
         </div>
       )}
 
-      {result.thirdPartyResources.length > 0 && (
+      {filteredResources.length > 0 && (
         <div className="mt-4">
           <h3 className="text-lg font-semibold mb-3">Third-Party Resources:</h3>
           <div className="space-y-4">
-            {result.thirdPartyResources.map((resource, index) => (
+            {filteredResources.map((resource, index) => (
               <div
                 key={index}
                 className="bg-gray-50 p-4 rounded-lg border border-gray-100"

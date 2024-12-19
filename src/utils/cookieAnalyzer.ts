@@ -50,6 +50,8 @@ function parseCookies(cookieHeader: string, pageDomain: string): CookieInfo[] {
         domain,
         isThirdParty,
         raw: cookie.trim(),
+        source: "header" as const,
+        type: "unknown" as const,
       };
     })
     .filter((cookie) => cookie.isThirdParty);
