@@ -1,6 +1,6 @@
-import { CookieInfo } from '../types/types';
-import { fetchWithProxy } from './proxyUtils';
-import { extractDomain } from './domainUtils';
+import { CookieInfo } from "../types/types";
+import { fetchWithProxy } from "./proxyUtils";
+import { extractDomain } from "./domainUtils";
 
 export async function analyzeCookies(url: string): Promise<CookieInfo[]> {
   try {
@@ -11,41 +11,50 @@ export async function analyzeCookies(url: string): Promise<CookieInfo[]> {
     // Parse Set-Cookie headers from the proxy response
     if (proxyResponse.headers) {
       Object.entries(proxyResponse.headers)
-        .filter(([key]) => key.toLowerCase() === 'set-cookie')
-        .forEach(([_, value]) => {
+        .filter(([key]) => key.toLowerCase() === "set-cookie")
+        .forEach(([, value]) => {
           const parsedCookies = parseCookies(value, pageDomain);
           cookies.push(...parsedCookies);
         });
     }
 
     // Also check for cookie-setting scripts in the content
-    const scriptCookies = analyzeScriptCookies(proxyResponse.contents, pageDomain);
+    const scriptCookies = analyzeScriptCookies(
+      proxyResponse.contents,
+      pageDomain
+    );
     cookies.push(...scriptCookies);
 
     return cookies;
   } catch (error) {
-    console.error('Cookie analysis error:', error);
-    throw new Error('Failed to analyze cookies');
+    console.error("Cookie analysis error:", error);
+    throw new Error("Failed to analyze cookies");
   }
 }
 
 function parseCookies(cookieHeader: string, pageDomain: string): CookieInfo[] {
-  return cookieHeader.split(/,(?=[^ ])/g)
-    .map(cookie => {
-      const [nameValue, ...options] = cookie.split(';');
-      const domain = options
-        .find(opt => opt.trim().toLowerCase().startsWith('domain='))
-        ?.split('=')[1]?.trim() || pageDomain;
+  return cookieHeader
+    .split(/,(?=[^ ])/g)
+    .map((cookie) => {
+      const [, ...options] = cookie.split(";");
+      const domain =
+        options
+          .find((opt) => opt.trim().toLowerCase().startsWith("domain="))
+          ?.split("=")[1]
+          ?.trim() || pageDomain;
 
-      const isThirdParty = !domain.endsWith(pageDomain) && !pageDomain.endsWith(domain);
+      const isThirdParty =
+        !domain.endsWith(pageDomain) && !pageDomain.endsWith(domain);
 
       return {
         domain,
         isThirdParty,
-        raw: cookie.trim()
+        raw: cookie.trim(),
+        source: "header" as const,
+        type: "unknown" as const,
       };
     })
-    .filter(cookie => cookie.isThirdParty);
+    .filter((cookie) => cookie.isThirdParty);
 }
 
 function analyzeScriptCookies(html: string, pageDomain: string): CookieInfo[] {
@@ -57,7 +66,7 @@ function analyzeScriptCookies(html: string, pageDomain: string): CookieInfo[] {
   while ((match = scriptPattern.exec(html)) !== null) {
     const scriptContent = match[1];
     let cookieMatch;
-    
+
     while ((cookieMatch = cookiePattern.exec(scriptContent)) !== null) {
       const cookieStr = cookieMatch[1];
       const parsedCookies = parseCookies(cookieStr, pageDomain);

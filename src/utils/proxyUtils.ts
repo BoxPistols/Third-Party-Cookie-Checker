@@ -1,10 +1,10 @@
 // Proxy service configuration
 const PROXY_CONFIG = {
-  baseUrl: 'https://api.allorigins.win/get',
+  baseUrl: "https://api.allorigins.win/get",
   params: {
-    url: '',
-    raw: false
-  }
+    url: "",
+    raw: false,
+  },
 };
 
 export interface ProxyResponse {
@@ -18,8 +18,8 @@ export interface ProxyResponse {
 
 export async function fetchWithProxy(url: string): Promise<ProxyResponse> {
   const proxyUrl = new URL(PROXY_CONFIG.baseUrl);
-  proxyUrl.searchParams.append('url', url);
-  
+  proxyUrl.searchParams.append("url", url);
+
   try {
     const response = await fetch(proxyUrl.toString());
     if (!response.ok) {
@@ -28,7 +28,7 @@ export async function fetchWithProxy(url: string): Promise<ProxyResponse> {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Proxy fetch error:', error);
-    throw new Error('Failed to fetch website content');
+    console.error("Proxy fetch error:", error);
+    throw new Error("Failed to fetch website content");
   }
 }

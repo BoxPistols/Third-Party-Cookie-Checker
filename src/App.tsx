@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Globe } from 'lucide-react';
-import { CheckerForm } from './components/CheckerForm';
-import { ResultDisplay } from './components/ResultDisplay';
-import { checkThirdPartyCookies } from './utils/cookieChecker';
-import { CookieCheckResult } from './types/types';
+import { useState } from "react";
+import { Globe } from "lucide-react";
+import { CheckerForm } from "./components/CheckerForm";
+import { ResultDisplay } from "./components/ResultDisplay";
+import { checkThirdPartyCookies } from "./utils/cookieChecker";
+import { CookieCheckResult } from "./types/types";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ function App() {
       const checkResult = await checkThirdPartyCookies(url);
       setResult(checkResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
       setResult(null);
     } finally {
       setIsLoading(false);
@@ -35,13 +35,14 @@ function App() {
             Third-Party Cookie Checker
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Enter a website URL to check if it uses third-party cookies and get detailed information about their usage.
+            Enter a website URL to check if it uses third-party cookies and get
+            detailed information about their usage.
           </p>
         </div>
 
         <div className="flex flex-col items-center space-y-6">
           <CheckerForm onSubmit={handleSubmit} isLoading={isLoading} />
-          
+
           {isLoading && (
             <div className="text-gray-600">
               Checking for third-party cookies...
@@ -49,9 +50,7 @@ function App() {
           )}
 
           {error && (
-            <div className="text-red-500 bg-red-50 p-4 rounded-lg">
-              {error}
-            </div>
+            <div className="text-red-500 bg-red-50 p-4 rounded-lg">{error}</div>
           )}
 
           <ResultDisplay result={result} />
