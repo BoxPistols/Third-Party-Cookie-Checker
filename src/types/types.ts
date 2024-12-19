@@ -1,3 +1,4 @@
+// types.ts
 export interface ResourceInfo {
   domain: string;
   type: string;
@@ -13,6 +14,25 @@ export interface ResourceInfo {
       | "other";
     description: string;
   };
+}
+
+export interface CookieInfo {
+  domain: string;
+  isThirdParty: boolean;
+  raw: string;
+}
+
+export interface CookieDetail {
+  domain: string;
+  purpose: string;
+  description: string;
+}
+
+export interface CookieCheckResult {
+  url: string;
+  hasThirdPartyCookies: boolean;
+  cookies: CookieInfo[];
+  thirdPartyResources: ResourceInfo[];
 }
 
 export interface CheckerFormProps {

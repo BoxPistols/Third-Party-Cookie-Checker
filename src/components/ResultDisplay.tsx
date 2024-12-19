@@ -1,6 +1,5 @@
-import React from 'react';
-import { AlertCircle, CheckCircle, ExternalLink } from 'lucide-react';
-import { CookieCheckResult } from '../types/types';
+import { AlertCircle, CheckCircle, ExternalLink } from "lucide-react";
+import { CookieCheckResult } from "../types/types";
 
 interface ResultDisplayProps {
   result: CookieCheckResult | null;
@@ -9,7 +8,8 @@ interface ResultDisplayProps {
 export function ResultDisplay({ result }: ResultDisplayProps) {
   if (!result) return null;
 
-  const totalThirdParty = result.cookies.length + result.thirdPartyResources.length;
+  const totalThirdParty =
+    result.cookies.length + result.thirdPartyResources.length;
 
   return (
     <div className="w-full max-w-2xl mt-8 bg-white rounded-lg shadow-lg p-6">
@@ -21,16 +21,18 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
         )}
         <h2 className="text-xl font-semibold">
           {result.hasThirdPartyCookies
-            ? `${totalThirdParty} Third-Party Source${totalThirdParty > 1 ? 's' : ''} Detected`
-            : 'No Third-Party Sources Detected'}
+            ? `${totalThirdParty} Third-Party Source${
+                totalThirdParty > 1 ? "s" : ""
+              } Detected`
+            : "No Third-Party Sources Detected"}
         </h2>
       </div>
-      
+
       <div className="flex items-center gap-2 text-gray-600 mb-4">
         <span>URL checked:</span>
-        <a 
-          href={result.url} 
-          target="_blank" 
+        <a
+          href={result.url}
+          target="_blank"
           rel="noopener noreferrer"
           className="font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
         >
@@ -44,7 +46,10 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
           <h3 className="text-lg font-semibold mb-3">Third-Party Cookies:</h3>
           <div className="space-y-4">
             {result.cookies.map((cookie, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+              <div
+                key={index}
+                className="bg-gray-50 p-4 rounded-lg border border-gray-100"
+              >
                 <p className="font-medium text-gray-800">
                   Domain: <span className="text-blue-600">{cookie.domain}</span>
                 </p>
@@ -62,16 +67,20 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
           <h3 className="text-lg font-semibold mb-3">Third-Party Resources:</h3>
           <div className="space-y-4">
             {result.thirdPartyResources.map((resource, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+              <div
+                key={index}
+                className="bg-gray-50 p-4 rounded-lg border border-gray-100"
+              >
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-medium text-gray-800">
-                    Domain: <span className="text-blue-600">{resource.domain}</span>
+                    Domain:{" "}
+                    <span className="text-blue-600">{resource.domain}</span>
                   </p>
                   <span className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">
                     {resource.type}
                   </span>
                 </div>
-                <a 
+                <a
                   href={resource.url}
                   target="_blank"
                   rel="noopener noreferrer"
