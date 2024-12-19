@@ -74,3 +74,10 @@ export interface ResourceInfo {
   isThirdParty: boolean;
   category: unknown;
 }
+
+// CookieDetail
+export interface CookieDetail {
+  domain: string;
+  purpose: string;
+  description: string;
+}
